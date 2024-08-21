@@ -1,0 +1,27 @@
+
+<br>
+
+<mat-card style="padding: 5px; text-align: center; margin: auto;">
+    
+    <mat-card-title style="display: flex; justify-content: center;">Potrebna je prijava</mat-card-title>
+    <h3>Prijavite se s šolskim mailom</h3>
+    <br>
+    <mat-card-content style="text-align: center; margin: auto;">
+        <asl-google-signin-button id = "logo" shape="pill" width="300" theme='filled_blue' type='standard' size='large'>
+        </asl-google-signin-button> 
+    </mat-card-content>
+</mat-card>
+
+<div *ngIf="napaka">
+    <br>
+    <div style="text-align: center;" class="alert alert-danger" role="alert">
+        <strong>Nimate dostopa!</strong> Prosim poskusite s šolskim elektronskim naslov.
+    </div>
+</div>
+
+
+<div id="g_id_onload"
+     data-client_id="YOUR_GOOGLE_CLIENT_ID"
+     data-skip_prompt_cookie="ggCOOKIE">
+</div>
+

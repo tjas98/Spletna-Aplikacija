@@ -1,0 +1,131 @@
+
+
+  <!-- --------------------------------------------------- -->
+
+<div>
+<div *ngIf="!loaded">
+    <br>
+    <mat-spinner style="margin: auto;"></mat-spinner>
+</div>
+
+<div *ngIf="obvestilo" style="text-align: center;">
+    <br>
+   
+    <button [routerLink]="['/obvestilo']" mat-raised-button color="warn">
+        <mat-icon>notifications</mat-icon>
+        {{naslov}}
+    </button>
+
+</div>
+
+<div *ngIf="loaded && day >= 6">
+    <br>
+    <h2 style="text-align: center;">Danes ni pouka</h2>
+</div>
+
+<div *ngIf="!weekend">
+    
+<div *ngIf="loaded && dan != ''">
+    <br>
+    <h1>Danes</h1>
+
+    <h3 style="text-align: center;">{{text}}</h3>
+
+    <table style="table-layout: fixed; width: 100%; text-align: center; border-collapse: collapse;" *ngIf="loaded">
+        <tr>
+            <td> <strong>V teku</strong> </td>
+            <td>
+                <strong *ngIf="!odmor">Konec ure</strong>
+                <strong *ngIf="odmor">Konec odmora</strong>
+            </td>
+            <td> <strong>Naslednja</strong> </td>
+        </tr>
+        <tr>
+            <td class="icons">
+                <span *ngIf="!odmor"><strong>{{urnik[dan][ura]}}</strong></span>
+                <span *ngIf="odmor"><strong>Odmor</strong></span>
+            </td>
+            <td class="icons">
+                <span *ngIf="!odmor && ura >= 0"><strong>{{trajanjeUr[ura][1]}}</strong></span>
+                <span *ngIf="odmor"><strong>{{trajanjeOdmorov[uraOdmora][1]}}</strong></span>
+            </td>
+            <td class="icons">
+                <span *ngIf="ura < 6 && ura >= 0"><strong>{{urnik[dan][uraKasneje]}}</strong></span>
+            </td>
+        </tr>
+    </table>
+
+    <br>
+</div>
+
+<div *ngIf="loaded && dan != ''">
+    <table style="width: 100%;  table-layout: fixed;">
+        <tr>
+            <th style="border: 1px solid #424242; color: white; background-color: #0D6EFD; padding: 5px;" class="a"
+                *ngFor="let i of [1,2,3,4,5,6,7]">
+
+                <div *ngIf="i-1 == ura" style="color: black;">
+                    <strong>{{i}}</strong>
+                </div>
+
+                <div *ngIf="i-1 != ura">
+                    {{i}}
+                </div>
+            </th>
+        </tr>
+
+        <tr>
+            <td class="ure" *ngFor="let i of [0,1,2,3,4,5,6]" style="border: 1px solid #424242; color: white;"
+            >
+                <span *ngIf="i != ura">{{ure[i]}}</span>
+                <span *ngIf="i == ura" style="color: black;"><strong>{{ure[i]}}</strong></span>
+            </td>
+        </tr>
+
+
+        <tr>
+            <td class="dan" *ngFor="let i of [0,1,2,3,4,5,6]"
+            [ngStyle]="{'background-color': i == ura ? '#B3B3B3' :  '' }">
+
+                <span *ngIf="i == ura && urnik[dan][i] != 'Prosto'">
+                    <strong>{{urnik[dan][i]}}</strong>
+                </span>
+
+                <span *ngIf="urnik[dan][i] != 'Prosto' && i != ura">
+                    {{urnik[dan][i]}}
+                </span>
+
+            </td>
+        </tr>
+    </table>
+
+    <br>
+</div>
+    <!-- TEDEN ------------------------------------------------- -->
+</div>
+<div>
+    <br>
+    <h1>Teden</h1>
+    <table *ngIf="loaded" style="width: 100%;">
+        <tr>
+            <th class="prvi"></th>
+            <th *ngFor="let dan of dni" style="border: 1px solid #424242; color: white; background-color: #0D6EFD;">
+                {{dan}}</th>
+        </tr>
+        <tr *ngFor="let i of steviloUr">
+            <td id="c" class="prvi">
+                {{i+1}}
+            </td>
+
+            <td class="teden" *ngFor="let d of dnevi"
+            [ngStyle]="{'background-color': i == ura && d == dan ? '#B3B3B3' :  '' }">
+                <span *ngIf="urnik[d][i] != 'Prosto' && d != dan">{{urnik[d][i]}}</span>
+                <span *ngIf="urnik[d][i] != 'Prosto' && dan == d">
+                    <strong>{{urnik[d][i]}}</strong>
+                </span>
+            </td>
+        </tr>
+    </table>
+
+</div>
+</div>

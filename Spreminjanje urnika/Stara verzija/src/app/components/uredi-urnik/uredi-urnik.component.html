@@ -1,0 +1,321 @@
+<div *ngIf="!mobile">
+
+    <!-- <mat-toolbar style=" left: 0; top: 0; position: fixed; background-color: #0D6EFD; z-index: 100;">
+        <button [matMenuTriggerFor]="menu" mat-icon-button>
+            <mat-icon>menu</mat-icon>
+        </button>
+    </mat-toolbar> -->
+
+    <div style="padding-top: 5px;">
+
+        <!-- <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="pojdiNaSpremembo()">
+                <mat-icon>published_with_changes</mat-icon>
+                <span>Sprememba</span>
+            </button>
+            <button mat-menu-item disabled>
+                <mat-icon>access_time</mat-icon>
+                <span>Uredi urnik</span>
+            </button>
+        </mat-menu> -->
+
+        <div *ngIf="neUrejeneUre || neUrejeniOdmori">
+            <div class="alert alert-danger" role="alert" style="width: 50%; margin: auto; text-align: center;">
+                <h2 class="alert-heading"><strong>Važno!</strong></h2>
+                <h4 *ngIf="neUrejeneUre">Šolske ure niso še urejene. Prosim <strong>uredi!</strong></h4>
+                <h4 *ngIf="neUrejeniOdmori">Odmori niso urejeni. Prosim <strong>uredi!</strong></h4>
+            </div>
+            <hr>
+        </div>
+
+        <div class="row justify-content-center" style="height: 50%;">
+            <div class="col-3">
+                <mat-card appearance="outlined" style="background-color: white; height: 100%;">
+                    <mat-card-content style="margin-top: auto; margin-bottom: auto;">
+                        <button class="gumb" [disabled]="izbranUrnik == 'potrjen'" style="background-color: #0066CC;"
+                            (click)="izberiUrnik('potrjen')" mat-raised-button>Vnesi že potrjen urnik</button>
+                        <hr>
+                        <button class="gumb" [disabled]="izbranUrnik == 'teden'" style="background-color: #0066CC;"
+                            (click)="izberiUrnik('teden')" mat-raised-button>Vnesi tedenski urnik</button>
+                        <hr>
+                        <button class="gumb" [disabled]="izbranUrnik == 'stalen'" style="background-color: #0066CC;"
+                            (click)="izberiUrnik('stalen')" mat-raised-button>Vnesi stalen urnik</button>
+                        <hr>
+                        <button class="gumb" [disabled]="vnosMail" style="background-color: #0066CC;"
+                            (click)="izberiMail()" mat-raised-button>Vnesi elektronske naslove</button>
+                        <hr>
+                        <table style="table-layout: fixed; margin: auto; width: 100%;">
+                            <td>
+                                <button class="gumb" style="background-color: #0066CC;" [disabled]="uredbaUre"
+                                    (click)="uredbaUre = !uredbaUre; uredbaOdmori = false" mat-raised-button>Uredi
+                                    ure</button>
+                            </td>
+                            <td>
+                                <button class="gumb" style="background-color: #0066CC;" [disabled]="uredbaOdmori"
+                                    (click)="uredbaOdmori = !uredbaOdmori; uredbaUre = false" mat-raised-button>Uredi
+                                    odmore</button>
+                            </td>
+                        </table>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+
+            <div class="col-1"></div>
+
+            <div class="col-3">
+                <mat-card appearance="outlined" style="background-color: white; height: 100%;">
+                    <mat-card-content style="text-align: center; margin-top: auto; margin-bottom: auto;">
+                        <div *ngIf="izbranUrnik.length > 0">
+                            <h2 *ngIf="izbranUrnik == 'potrjen'">Vnesi že potrjen urnik</h2>
+                            <h2 *ngIf="izbranUrnik == 'teden'">Vnesi tedenski urnik</h2>
+                            <h2 *ngIf="izbranUrnik == 'stalen'">Vnesi stalen urnik</h2>
+
+                            <button type="button" mat-raised-button (click)="fileInput.click()">Izberi file</button>
+                            <input hidden (change)="onFileSelected($event)" #fileInput type="file" id="file">
+                            <hr *ngIf="file!=null">
+
+                            <h3 *ngIf="izbranUrnik != 'stalen'">{{zacetekTedna}}</h3>
+                            <h2 class="file-name">{{file?.name}}</h2>
+
+                            <button color="accent" mat-raised-button (click)="nalozi(izbranUrnik)"
+                                *ngIf="file != null && izbranUrnik.length > 0">
+                                Preglej urnik
+                            </button>
+
+                        </div>
+
+                        <div *ngIf="vnosMail">
+                            <h2>Vnesi elektronske naslove</h2>
+                            <button type="button" mat-raised-button (click)="fileInput.click()">Izberi file</button>
+                            <input hidden (change)="mailFile($event)" #fileInput type="file" id="file">
+                            <hr *ngIf="fileMail != null">
+                            <span class="file-name">{{file?.name}}</span>
+                            <button color="accent" mat-raised-button (click)="naloziMaile()"
+                                *ngIf="fileMail != null">Naloži</button>
+                        </div>
+
+
+
+                        <div *ngIf="jeNapaka || jeOpozorilo">
+                            <hr>
+                            @if (napaka.napaka == "noProf") {
+                            <div class="alert alert-danger" role="alert">
+                                <h2>Prišlo je do napake</h2>
+                                <p>Naslednji profesorji niso prisotni v stalnem urniku: </p>
+                                <p>Prosim preglej urnik</p>
+                            </div>
+
+                            @for (prof of napaka.razlike; track prof) {
+                            <p>{{prof}}</p>
+                            }
+                            }
+
+                            @if (napaka.napaka == "prazneUre") {
+                            <div class="alert alert-warning" role="alert">
+                                <h2>Pozor!</h2>
+                                <p>Naslednje šolske ure nimajo zapisanega profesorja: </p>
+                            </div>
+
+                            <table style="table-layout: fixed; text-align: center; width: 100%; ">
+                                <tr>
+                                    <th>Dan</th>
+                                    <th>Ura</th>
+                                    <th>Razred</th>
+
+
+                                </tr>
+                                @for (ura of napaka.prazneUre; track ura) {
+                                <tr>
+                                    <td>{{ura.dan.toUpperCase()}}</td>
+                                    <td>{{ura.ura}}</td>
+                                    <td>{{ura.razred}}</td>
+
+
+                                </tr>
+
+
+                                }
+                            </table>
+
+                            }
+
+                        </div>
+
+                        @if (pregledan && !jeNapaka) {
+                        <hr>
+                        <button color="accent" mat-raised-button (click)="naloziVZbirko()">
+                            Naloži urnik
+                        </button>
+                        }
+
+
+                        <div *ngIf="spinner">
+                            <hr>
+                            <mat-spinner></mat-spinner>
+                        </div>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </div>
+        <br><br>
+        <div *ngIf="uredbaUre && steviloUr.length < 1">
+            <h1>VNESI URNIK</h1>
+        </div>
+        <div class="row justify-content-center" *ngIf="uredbaUre && steviloUr.length > 0" style="margin-bottom: 10px;">
+            <br>
+            <div class="col-8">
+                <mat-card appearance="outlined" style="background-color: white;">
+                    <mat-card-title style="text-align: center;">Urejanje ur</mat-card-title>
+                    <mat-card-content>
+                        <div>
+                            <mat-tab-group [backgroundColor]="'accent'" [color]="'primary'">
+                                <mat-tab style="color: black;" [label]="tab+1" *ngFor="let tab of steviloUr">
+                                    <hr>
+                                    <table style="margin: auto; width: 75%;">
+                                        <tr>
+                                            <th>Začetek {{tab+1}}. ure</th>
+                                            <th>Konec {{tab+1}}. ure</th>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input matInput type="time" class="form-control" matInput
+                                                    (value)="'14:23'" [(ngModel)]="zacetekUre[tab]" name="value"
+                                                    placeholder="Vnesi začetek ure">
+                                            </td>
+                                            <td>
+                                                <input matInput type="time" class="form-control" matInput
+                                                    [(ngModel)]="konecUre[tab]" name="value"
+                                                    placeholder="Vnesi začetek ure">
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                </mat-tab>
+                            </mat-tab-group>
+                            <hr>
+                            <button class="gumb" [disabled]="zacetekUre.length != steviloUr.length"
+                                style="background-color: #0066CC;" (click)="urediUre()"
+                                mat-raised-button>Shrani</button>
+                        </div>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+
+        </div>
+
+        <div class="row justify-content-center" *ngIf="uredbaOdmori">
+            <br>
+            <div class="col-8">
+                <mat-card appearance="outlined" style="background-color: white;">
+                    <mat-card-title style="text-align: center;">Urejanje odmorov</mat-card-title>
+                    <mat-card-content>
+                        <input matInput type="number" class="form-control" [(ngModel)]="stevilo"
+                            placeholder="Vnesi število odmorov">
+                        <hr>
+                        <button class="gumb" [disabled]="!stevilo" style="background-color: #0066CC;" (click)="prova()"
+                            mat-raised-button>Potrdi</button>
+                        <hr>
+                        <div *ngIf="vnosUr">
+                            <mat-tab-group [backgroundColor]="'accent'" [color]="'primary'">
+                                <mat-tab style="color: black;" [label]="tab+1" *ngFor="let tab of steviloUrOdmora">
+                                    <hr>
+                                    <table style="margin: auto; width: 75%;">
+                                        <tr>
+                                            <th>Začetek {{tab+1}}. odmora</th>
+                                            <th>Konec {{tab+1}}. odmora</th>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input matInput type="time" class="form-control" matInput
+                                                    [(ngModel)]="zacetekOdmora[tab]" name="value"
+                                                    placeholder="Vnesi začetek odmora">
+                                            </td>
+                                            <td>
+                                                <input matInput type="time" class="form-control" matInput
+                                                    [(ngModel)]="konecOdmora[tab]" name="value"
+                                                    placeholder="Vnesi konec odmora">
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </mat-tab>
+                            </mat-tab-group>
+                            <hr>
+                            <button class="gumb"
+                                [disabled]="zacetekOdmora.length != stevilo && konecOdmora.length != stevilo"
+                                style="background-color: #0066CC;" (click)="urediOdmore()" mat-raised-button>Shrani
+                            </button>
+                        </div>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+            <br>
+        </div>
+    </div>
+</div>
+
+<!-- MOBILE MOBILE MOBILE MOBILE MOBILE MOBILE MOBILE MOBILE MOBILE MOBILE MOBILE MOBILE MOBILE MOBILE MOBILE MOBILE MOBILE MOBILE MOBILE -->
+
+<div *ngIf="mobile">
+
+
+    <div class="row">
+        <mat-card appearance="outlined" style="background-color: white; height: 100%;">
+            <mat-card-content>
+                <button class="gumb" style="background-color: #0066CC;" (click)="izberiUrnik(1)" mat-raised-button>Vnesi
+                    že potrjen urnik</button>
+                <hr>
+                <button class="gumb" style="background-color: #0066CC;" (click)="izberiUrnik(2)" mat-raised-button>Vnesi
+                    tedenski urnik</button>
+                <hr>
+                <button class="gumb" style="background-color: #0066CC;" (click)="izberiUrnik(3)" mat-raised-button>Vnesi
+                    stalen urnik</button>
+                <hr>
+                <button class="gumb" style="background-color: #0066CC;" (click)="izberiMail()" mat-raised-button>Vnesi
+                    elektronske naslove</button>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+
+    <div class="row">
+        <hr>
+        <mat-card appearance="outlined" style="background-color: white; height: 100%;">
+            <mat-card-content style="text-align: center; margin-top: auto; margin-bottom: auto;">
+                <div *ngIf="izbranUrnik">
+                    <h2 *ngIf="izbranUrnik == 'potrjen'">Vnesi že potrjen urnik</h2>
+                    <h2 *ngIf="izbranUrnik == 'teden'">Vnesi tedenski urnik</h2>
+                    <h2 *ngIf="izbranUrnik == 'stalen'">Vnesi stalen urnik</h2>
+
+                    <button type="button" mat-raised-button (click)="fileInput.click()">Izberi file</button>
+
+                    <input hidden (change)="onFileSelected($event)" #fileInput type="file" id="file">
+
+                    <hr *ngIf="file!=null">
+
+                    <h2 class="file-name">{{file?.name}}</h2>
+
+                    <button color="accent" mat-raised-button (click)="nalozi(izbranUrnik)"
+                        *ngIf="file != null && izbranUrnik">
+                        Preglej urnik
+                    </button>
+                </div>
+                <div *ngIf="vnosMail">
+                    <h2>Vnesi elektronske naslove</h2>
+                    <button type="button" mat-raised-button (click)="fileInput.click()">Izberi file</button>
+                    <input hidden (change)="mailFile($event)" #fileInput type="file" id="file">
+                    <hr *ngIf="fileMail != null">
+                    <span class="file-name">{{file?.name}}</span>
+                    <button color="accent" mat-raised-button (click)="naloziMaile()"
+                        *ngIf="fileMail != null">Naloži</button>
+                </div>
+                <div *ngIf="spinner">
+                    <hr>
+                    <mat-spinner></mat-spinner>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>
+<br>
+<br>
+<br>

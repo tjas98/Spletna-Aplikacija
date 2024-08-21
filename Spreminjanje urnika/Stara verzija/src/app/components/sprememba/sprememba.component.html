@@ -1,0 +1,815 @@
+<div *ngIf="loaded && !mobile">
+    <div>
+
+        <br>
+        <div class="row" style="height: 15%;">
+
+
+
+            <mat-menu #menu="matMenu">
+                <button mat-menu-item disabled>
+                    <mat-icon>published_with_changes</mat-icon>
+                    <span>Sprememba</span>
+                </button>
+                <button mat-menu-item (click)="pojdiNaUrejanje()">
+                    <mat-icon>access_time</mat-icon>
+                    <span>Uredi urnik</span>
+                </button>
+                <button mat-menu-item (click)="logout()">
+                    <mat-icon>logout</mat-icon>
+                    <span>Logout</span>
+                </button>
+            </mat-menu>
+
+            <div>
+
+            </div>
+
+            <div class="col">
+
+                <table style="margin: auto;">
+                    <td class="gumbi">
+
+                    </td>
+                    <td class="gumbi">
+                        <button class="fabs" mat-mini-fab color="primary" (click)="izbrisiProfesorja()"
+                            matTooltip="Izberi profesorja, ki bo odsoten" [matTooltipPosition]="'above'">
+                            <mat-icon>person_off</mat-icon>
+                        </button>
+                    </td>
+                    <td class="gumbi">
+                        <button class="fabs" mat-mini-fab color="accent" (click)="izbrisiSpremembe()"
+                            matTooltip="Izbriši vse spremembe za izbran dan" [matTooltipPosition]="'above'">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </td>
+                    <td class="gumbi">
+                        <button style="background-color: #0D6EFD; color: white;" mat-mini-fab color="accent"
+                            class="fabs" *ngIf="prostiRazredi == 0" type="button" (click)="prikaziProsteUre()"
+                            matBadge="{{prostiRazredi}}" matBadgePosition="before" matBadgeColor="accent"
+                            matTooltip="Prikaži proste ure" [matTooltipPosition]="'below'">
+                            <mat-icon>search</mat-icon>
+                        </button>
+
+                        <button style="background-color: #0D6EFD; color: white;" class="fabs" mat-mini-fab
+                            color="accent" *ngIf="prostiRazredi > 0" type="button" (click)="prikaziProsteUre()"
+                            matBadge="{{prostiRazredi}}" matBadgePosition="before" matBadgeColor="warn"
+                            matTooltip="Prikaži proste ure" [matTooltipPosition]="'below'">
+                            <mat-icon>search</mat-icon>
+                        </button>
+                    </td>
+                    <td class="gumbi">
+                        <button class="fabs" mat-mini-fab color="accent" (click)="izberiVse()"
+                            matTooltip="Izberi vse profesorje in razrede" [matTooltipPosition]="'below'">
+                            <mat-icon>select_all</mat-icon>
+                        </button>
+                    </td>
+                    <td class="gumbi">
+                        <button class="fabs" mat-mini-fab color="accent" (click)="izlet()" matTooltip="Dejavnosti"
+                            [matTooltipPosition]="'below'">
+                            <mat-icon>train</mat-icon>
+                        </button>
+                    </td>
+
+                    <td class="gumbi">
+                        <button class="fabs" type="button" (click)="najdiVseSpremembe()" mat-mini-fab color="accent"
+                            matTooltip="Prikaži spremembe" [matTooltipPosition]="'below'">
+                            <mat-icon>change_circle</mat-icon>
+                        </button>
+                    </td>
+
+                    <td class="gumbi">
+                        <button (click)="automatic()" class="fabs" mat-mini-fab
+                            matTooltip="Samodejno potrdi proste prve in zadnje ure" color="primary">
+                            <mat-icon>hdr_auto</mat-icon>
+                        </button>
+                    </td>
+                    <td class="gumbi" style="vertical-align: middle;">
+
+                        <mat-slide-toggle [checked]="zamenjava" matTooltip="Zamenjaj ure" (click)="toggleZamenjava()">
+
+                        </mat-slide-toggle>
+                    </td>
+                </table>
+            </div>
+            <div class="col">
+                <table style="margin: auto;">
+                    <td>
+                        <button class="fabs" mat-mini-fab matTooltip="Shrani urnik" [matTooltipPosition]="'below'"
+                            (click)="shraniZaDan(0, 'Shrani')">
+                            <mat-icon>save</mat-icon>
+                        </button>
+                    </td>
+                    <td>
+                        <button class="fabs" mat-mini-fab matTooltip="Potrdi urnik" [matTooltipPosition]="'below'"
+                            (click)="shraniZaDan(1, 'Potrdi')">
+                            <mat-icon>thumb_up</mat-icon>
+                        </button>
+                    </td>
+                    <td style="vertical-align: middle;">
+                        <mat-slide-toggle matTooltip="Autosave" [matTooltipPosition]="'below'" [checked]="autosave"
+                            (click)="toggleAutosave()">
+
+                        </mat-slide-toggle>
+                    </td>
+
+
+
+                </table>
+            </div>
+            <div class="col">
+                <table style="margin: auto;">
+
+                    <button mat-raised-button matTooltip="Uporabljaj shranjen urnik za zapisan teden"
+                        [matTooltipPosition]="'below'" [matMenuTriggerFor]="kasnUrnik">{{uporabljenUrnik}}</button>
+
+
+                </table>
+                <mat-menu #kasnUrnik="matMenu">
+                    <button mat-menu-item [disabled]="!datumShranjen" (click)="zamenjajUrnik(0)">
+                        <mat-icon>save</mat-icon>
+                        <span>Shranjen za teden: {{zacetekTeden.split('-')[0]}} {{zacetekTeden.split('-')[1]}}</span>
+
+                    </button>
+                    <button mat-menu-item [disabled]="!datumPotrjen" (click)="zamenjajUrnik(1)">
+                        <mat-icon>thumb_up_off_alt</mat-icon>
+                        <span>Potrjen za teden: {{zacetekTeden.split('-')[0]}} {{zacetekTeden.split('-')[1]}}</span>
+                    </button>
+                    <button mat-menu-item (click)="zamenjajUrnik(2)">
+                        <mat-icon>calendar_view_week</mat-icon>
+                        <span>Stalen urnik</span>
+                    </button>
+                </mat-menu>
+            </div>
+            <div class="col">
+                <table style="margin: auto;">
+                    <td class="gumbi">
+                        <button class="fabs" mat-mini-fab color="accent" (click)="shraniPDF()"
+                            matTooltip="Shrani prikazan urnik v PDF" [matTooltipPosition]="'below'">
+                            <mat-icon>picture_as_pdf</mat-icon>
+                        </button>
+                    </td>
+
+                    <td class="gumbi">
+                        <button class="fabs" [matMenuTriggerFor]="odpriNotifico" mat-mini-fab color="accent"
+                            matTooltip="Poslji spremembe..." [matTooltipPosition]="'below'">
+                            <mat-icon>notification_add</mat-icon>
+                        </button>
+                    </td>
+
+                    <td class="gumbi">
+                        <button class="fabs" [matMenuTriggerFor]="odpriMail" mat-mini-fab color="accent"
+                            matTooltip="Poslji spremembe..." [matTooltipPosition]="'below'">
+                            <mat-icon>mail</mat-icon>
+                        </button>
+                    </td>
+                    <!-- MAIL -->
+                    <mat-menu #odpriMail>
+                        <button [disabled]="izbraniProfesorji.length == 0" (click)="posljiMail(1)" mat-menu-item>
+                            <mat-icon>school</mat-icon>
+                            profesorjem
+                        </button>
+                        <button [disabled]="izbraniRazredi.length == 0" (click)="posljiMail(0)" mat-menu-item>
+                            <mat-icon>person</mat-icon>
+                            dijakom
+                        </button>
+                    </mat-menu>
+                    <!-- NOTIFICA -->
+
+                    <mat-menu #odpriNotifico>
+                        <button [disabled]="izbraniProfesorji.length == 0" (click)="posljiNotifico(1)" mat-menu-item>
+                            <mat-icon>school</mat-icon>
+                            profesorjem
+                        </button>
+                        <button [disabled]="izbraniRazredi.length == 0" (click)="posljiNotifico(0)" mat-menu-item>
+                            <mat-icon>person</mat-icon>
+                            dijakom
+                        </button>
+                    </mat-menu>
+
+                    <td class="gumbi">
+                        <button class="fabs" mat-mini-fab color="accent" (click)="shraniExcel()"
+                            matTooltip="Shrani urnik v Excel formatu" [matTooltipPosition]="'below'">
+                            <mat-icon>file_download</mat-icon>
+                        </button>
+                    </td>
+                    <td class="gumbi">
+                        <button class="fabs" [matMenuTriggerFor]="kopiraj" mat-mini-fab color="accent"
+                            matTooltip="Kopiraj maile izbranih..." [matTooltipPosition]="'below'">
+                            <mat-icon>content_copy</mat-icon>
+                        </button>
+                    </td>
+
+                    <mat-menu #kopiraj>
+                        <button (click)="mail(0)" mat-menu-item>
+                            <mat-icon>school</mat-icon>
+                            dijakov
+                        </button>
+                        <button (click)="mail(1)" mat-menu-item>
+                            <mat-icon>person</mat-icon>
+                            profesorjev
+                        </button>
+                    </mat-menu>
+
+                </table>
+            </div>
+
+
+
+
+
+            <div *ngIf="zamenjava" style="text-align: center;">
+                <hr>
+                <table style="text-align: center; width: 100%;">
+                    <td>
+                        <button type="button" (click)="izbrisiIzbranega(0)" mat-raised-button color="warn"
+                            style="width: 95%;"><i class="fa-solid fa-ban"></i></button>
+                    </td>
+                    <td>
+                        <button type="button" (click)="zamenjajDveUri()" color="accent" mat-raised-button
+                            style="width: 95%;"><i class="fa-solid fa-check"></i></button>
+                    </td>
+                </table>
+            </div>
+
+
+            <div *ngIf="loading">
+                <br>
+                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <hr style="margin-top: 1em; margin-bottom: 1em;">
+            <div class="row" style="margin: auto;">
+                <div class="col-6">
+                    <ng-select (change)="urediProfesorje()" [items]="vsiProfesorji" autofocus appearance="outline"
+                        placeholder="Izberi profesorje" appendTo="body" [(ngModel)]="izbraniProfesorji"
+                        [multiple]="true" [hideSelected]="true">
+                    </ng-select>
+                </div>
+                <div class="col-6">
+                    <ng-select (change)="urediRazrede()" [items]="vsiRazredi" placeholder="Izberi razrede" autofocus
+                        [hideSelected]="true" appearance="outline" appendTo="body" [(ngModel)]="izbraniRazredi"
+                        [multiple]="true">
+                    </ng-select>
+                </div>
+            </div>
+
+            <hr style="margin-top: 1em; margin-bottom: 1em;">
+
+            <!-- Urnik razredov -->
+            <div class="row">
+                <div class="col-10" style="margin: auto;">
+                    <div *ngIf="izbraniRazredi.length > 0">
+                        <table id="POSKUS" class="table table-bordered text-center"
+                            style="table-layout: fixed; width: 100%; text-align: center;">
+                            <thead>
+                                <tr class="bg-light-gray">
+                                    <th class="text-uppercase">Razredi</th>
+                                    <td *ngFor="let ura of ure, index as i" class="text-uppercase" style="  
+                            border: 1px solid #424242; color: white; background-color: #424242;">
+                                        <strong>{{i+1}}</strong> - {{ure[i]}}
+                                    </td>
+                                </tr>
+                            </thead>
+                            <tbody *ngFor="let razred of izbraniRazredi">
+                                <tr>
+                                    <td class="align-middle" style="background-color: #424242; border: 1px solid #424242; 
+                            border-bottom: white; border-top: white; color: white; font-size: medium;">
+                                        {{razred}}
+                                    </td>
+                                    <td id="del" *ngFor="let ura of ure, index as j" style="border: 1px solid #424242; overflow: hidden; text-overflow: ellipsis;
+                            cursor: pointer;" [ngStyle]="{'background-color': najdiBarvo(objektRazredov[razred][j], razred, j),
+                            'border': getBorderIzbran(razred, objektRazredov[razred][j], j)}"
+                                        (click)="clickNaUro(objektRazredov[razred + 'predmet'][j], objektRazredov[razred][j], razred, j)"
+                                        (dblclick)="sprememba(razred, objektRazredov[razred][j], objektRazredov[razred + 'predmet'][j], j)">
+
+                                        {{objektRazredov[razred + 'predmet'][j]}}
+                                        <hr *ngIf="objektRazredov[razred][j].length > 1"
+                                            style="margin-top: 0.2em; margin-bottom: 0.2em;">
+                                        {{objektRazredov[razred][j]}}
+                                    </td>
+                                </tr>
+
+                               
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Urnik profesorjev -->
+
+            <div class="row">
+                <div class="col-10" style="margin: auto;">
+                    <div *ngIf="izbraniProfesorji.length > 0">
+                        <table class="table table-bordered text-center"
+                            style="table-layout: fixed; width: 100%; text-align: center;">
+                            <thead>
+                                <tr class="bg-light-gray">
+                                    <th class="text-uppercase">Profesor</th>
+                                    <td *ngFor="let i of [1,2,3,4,5,6,7]" 
+                                    class="text-uppercase" 
+                                    style="background-color: #424242;  
+                                            border: 1px solid #424242; 
+                                            color: white;">
+                                            <strong>{{i}}</strong> - {{ure[i-1]}}
+                                    </td>
+                                </tr>
+                            </thead>
+                            <tbody *ngFor="let profesor of izbraniProfesorji">
+                                <tr>
+                                    <td style="background-color: #424242; border: 1px solid #424242; color: white; 
+                                        border-bottom: 1px solid white; border-top: 1px solid white;
+                                        text-align: center;">
+                                        
+                                        <div style="float:left;width:15%;">
+                                            @if (uporabljenUrnik != 'Stalen urnik') {
+                                                <i (mouseleave)="prikaziStalenUrnik = false" (mouseenter)="vrniText(profesor)" style="cursor: pointer;" class="fa-regular fa-clock"></i>
+                                            }
+                                        </div>
+
+                                        <div style="margin: auto; font-size: medium;">
+                                            <!-- <i (click)="spremembaZaProfesorja(a)" style="cursor: pointer;">{{a}}</i> -->
+                                            <i>{{profesor}}</i>
+                                        </div>
+
+                                    </td>
+                                    <td id="del" *ngFor="let j of [0,1,2,3,4,5,6]" style="border: 1px solid #424242; text-overflow: ellipsis;
+                                cursor: pointer; background-color: #ededed; font-size: medium-large;"
+                                        (click)="clickNaUroProfesorja(urnikProfesorja[profesor][j])"
+                                        [ngStyle]="{'background-color': barvaUrnikProfesorja(profesor, j)}">
+                                        {{urnikProfesorja[profesor][j]}}
+                                    </td>
+                       
+                                </tr>
+
+
+                               
+
+                                @if (prikaziStalenUrnik && stalenProfesor == profesor) {
+                                    <tr>
+                                        <td><strong>Stalen urnik</strong></td>
+                                        <td *ngFor="let i of [0,1,2,3,4,5,6]" style="background-color: #0D6EFD; color: white;">
+                                           {{prikazStalnegaUrnika[i] | prosto}}
+                                        </td>
+                                    </tr>
+                                    
+                                }
+                               
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- MOBILE MOBILE MOBILE MOBILE MOBILE MOBILE MOBILE MOBILE MOBILE MOBILE-->
+
+<div *ngIf="mobile && loaded">
+
+    <br>
+    <div class="row justify-content-center">
+        <div class="col" style="text-align: center;">
+            <button [matMenuTriggerFor]="menuStoritve" mat-raised-button>
+                Storitve
+            </button>
+        </div>
+        <div class="col" style="text-align: center;">
+            <button style="background-color: #0D6EFD; color: white;" mat-mini-fab color="accent" class="fabs"
+                *ngIf="prostiRazredi == 0" type="button" (click)="prikaziProsteUre()" matBadge="{{prostiRazredi}}"
+                matBadgePosition="before" matBadgeColor="accent" matTooltip="Prikaži proste ure"
+                [matTooltipPosition]="'below'">
+                <i class="fa-solid fa-magnifying-glass-plus"></i>
+            </button>
+
+            <button style="background-color: #0D6EFD; color: white;" class="fabs" mat-mini-fab color="accent"
+                *ngIf="prostiRazredi > 0" type="button" (click)="prikaziProsteUre()" matBadge="{{prostiRazredi}}"
+                matBadgePosition="before" matBadgeColor="warn" matTooltip="Prikaži proste ure"
+                [matTooltipPosition]="'below'">
+                <i class="fa-solid fa-magnifying-glass-plus"></i>
+            </button>
+        </div>
+        <div class="col" style="text-align: center;">
+            <button [matMenuTriggerFor]="menuUrniki" mat-raised-button>
+                {{uporabljenUrnik}}
+            </button>
+        </div>
+
+
+
+    </div>
+
+    <mat-menu #menuUrniki="matMenu">
+        <button mat-menu-item [disabled]="!datumShranjen" (click)="uporabljajShranjen(0)">
+            <mat-icon>save</mat-icon>
+            <span>Shranjen za teden: {{zacetekTeden.split('-')[0]}} {{zacetekTeden.split('-')[1]}}</span>
+
+        </button>
+        <button mat-menu-item [disabled]="!datumPotrjen" (click)="uporabljajShranjen(1)">
+            <mat-icon>thumb_up_off_alt</mat-icon>
+            <span>Potrjen za teden: {{zacetekTeden.split('-')[0]}} {{zacetekTeden.split('-')[1]}}</span>
+        </button>
+        <button mat-menu-item (click)="zamenjajUrnik('stalen')">
+            <mat-icon>calendar_view_week</mat-icon>
+            <span>Stalen urnik</span>
+        </button>
+        <hr style="color: white">
+        <button mat-menu-item (click)="shraniZaDan(0, 'Shrani')">
+            <mat-icon>thumb_up</mat-icon>
+            <span>Potrdi urnik</span>
+        </button>
+        <button mat-menu-item (click)="shraniZaDan(1, 'Potrdi')">
+            <mat-icon>save</mat-icon>
+            <span>Shrani urnik</span>
+        </button>
+    </mat-menu>
+
+    <mat-menu #menuStoritve="matMenu">
+        <button (click)="izbrisiProfesorja()" mat-menu-item>
+            <span>Izbriši profesorja</span>
+        </button>
+        <button mat-menu-item (click)="izbrisiSpremembe()">
+            <span>Izbriši spremembe</span>
+        </button>
+        <button mat-menu-item (click)="najdiVseSpremembe()">
+            <span>Najdi vse spremembe</span>
+        </button>
+        <hr style="color: white;">
+        <button mat-menu-item (click)="izlet()">
+            <span>Izlet</span>
+        </button>
+
+        <button mat-menu-item (click)="automatic()">
+            <span>Samodejne proste</span>
+        </button>
+        <button mat-menu-item (click)="toggleZamenjava()">
+            <span>Zamenjava 2 ur</span>
+        </button>
+        <button mat-menu-item (click)="izberiVse()">
+            <span>Izberi vse</span>
+        </button>
+        <hr style="color: white;">
+        <button mat-menu-item [matMenuTriggerFor]="odpriMail">
+            <span>Pošlji spremembe...</span>
+        </button>
+        <button mat-menu-item (click)="izberiVse()">
+            <span>Izberi vse</span>
+        </button>
+
+    </mat-menu>
+
+    <mat-menu #odpriMail>
+        <button [disabled]="izbraniProfesorji.length == 0" (click)="posljiMail(1)" mat-menu-item>
+            <mat-icon>man</mat-icon>
+            profesorjem
+        </button>
+        <button [disabled]="izbraniRazredi.length == 0" (click)="posljiMail(0)" mat-menu-item>
+            <mat-icon>boy</mat-icon>
+            dijakom
+        </button>
+    </mat-menu>
+
+    <div *ngIf="loading">
+        <hr>
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    </div>
+
+
+    <hr>
+    <div class="row">
+        <ng-select (change)="urediProfesorje()" [items]="vsiProfesorji" autofocus appearance="outline"
+            placeholder="Izberi profesorje" appendTo="body" [(ngModel)]="izbraniProfesorji" [multiple]="true"
+            [hideSelected]="true">
+        </ng-select>
+        <hr style="margin-top: 1em; margin-bottom: 1em;">
+        <ng-select (change)="urediRazrede()" [items]="vsiRazredi" placeholder="Izberi razrede" autofocus
+            [hideSelected]="true" appearance="outline" appendTo="body" [(ngModel)]="izbraniRazredi" [multiple]="true">
+        </ng-select>
+    </div>
+
+
+
+    <div *ngIf="zamenjava" style="text-align: center;">
+        <hr>
+        <table style="text-align: center; width: 100%;">
+            <td>
+                <button type="button" (click)="izbrisiIzbranega(0)" mat-raised-button color="warn"
+                    style="width: 95%;"><i class="fa-solid fa-ban"></i></button>
+            </td>
+            <td>
+                <button type="button" (click)="zamenjajDveUri()" color="accent" mat-raised-button style="width: 95%;"><i
+                        class="fa-solid fa-check"></i></button>
+            </td>
+        </table>
+    </div>
+
+    <div class="row">
+
+        <div *ngIf="odprto && izbraniRazredi.length > 0">
+            <hr>
+            <mat-card appearance="outlined" style="background-color: white;"
+                (click)="sprememba(podatekUre.razred, podatekUre.profesor, podatekUre.predmet, podatekUre.ura-1)">
+                <mat-card-content>
+                    <table style="width: 100%; text-align: center; table-layout: fixed;">
+                        <tr>
+                            <td><mat-icon>access_time</mat-icon></td>
+                            <td><mat-icon>school</mat-icon></td>
+                            <td><mat-icon>subject</mat-icon></td>
+                            <td><mat-icon>person</mat-icon></td>
+                        </tr>
+                        <tr>
+                            <td>{{podatekUre.ura}}</td>
+                            <td>{{podatekUre.razred}}</td>
+                            <td>{{podatekUre.predmet}}</td>
+                            <td>{{podatekUre.profesor}}</td>
+                        </tr>
+                    </table>
+
+
+                </mat-card-content>
+            </mat-card>
+
+        </div>
+
+        <!-- Urnik RAZREDI -->
+        <div *ngIf="izbraniRazredi.length > 0">
+            <hr>
+            <table id="POSKUS" class="table table-bordered text-center"
+                style="table-layout: fixed; width: 100%; text-align: center;">
+                <thead>
+                    <tr class="bg-light-gray">
+                        <th class="text-uppercase">RAZ</th>
+                        <td *ngFor="let i of [1,2,3,4,5,6,7]" class="text-uppercase" style="  
+                        border: 1px solid #424242; color: white; background-color: #424242;"><strong>{{i}}</strong>
+                        </td>
+                    </tr>
+                </thead>
+                <tbody *ngFor="let razred of izbraniRazredi">
+                    <tr>
+                        <td class="align-middle" style="background-color: #424242; border: 1px solid #424242; 
+                        color: white;">
+                            {{razred}}
+                        </td>
+                        <td id="del" *ngFor="let j of [0,1,2,3,4,5,6]" style="border: 1px solid #424242; overflow: hidden; text-overflow: ellipsis;
+                        cursor: pointer; margin-top: auto;"
+                            (click)="openSnackBar(objektRazredov[razred + 'predmet'][j], objektRazredov[razred][j], j+1, razred)"
+                            [ngStyle]="{'background-color': najdiBarvo(objektRazredov[razred][j], razred, j),
+                        'border': getBorderIzbran(razred, objektRazredov[razred][j], j)}"
+                            (dblclick)="sprememba(razred, objektRazredov[razred][j], objektRazredov[razred + 'predmet'][j], j)">
+
+                            {{objektRazredov[razred + 'predmet'][j].substring(0,3)}}
+
+                            <!-- {{objektRazredov[razred][j]}} -->
+                        </td>
+                    </tr>
+
+
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Urnik PROFESORJI -->
+
+        <div *ngIf="izbraniProfesorji.length > 0">
+            <hr>
+            <table class="table table-bordered text-center"
+                style="table-layout: fixed; width: 100%; text-align: center;">
+                <thead>
+                    <tr class="bg-light-gray">
+                        <th class="text-uppercase">Prof</th>
+                        <td *ngFor="let i of [1,2,3,4,5,6,7]" class="text-uppercase" style="background-color: #424242;  
+                            border: 1px solid #424242; color: white;"><strong>{{i}}</strong></td>
+                    </tr>
+                </thead>
+                <tbody *ngFor="let profesor of izbraniProfesorji">
+                    <tr *ngIf="urnikProfesorja[profesor][0] != 1">
+                        <td style="background-color: #424242; border: 1px solid #424242; color: white; 
+                        text-align: center; text-overflow: ellipsis;" (click)="pokaziImeProfesorja(profesor)">
+                            {{profesor.substring(0,4)}}
+                        </td>
+                        <td id="del" *ngFor="let j of [0,1,2,3,4,5,6]" style="border: 1px solid #424242; text-overflow: ellipsis;
+                            cursor: pointer; background-color: #ededed; font-size: medium-large;"
+                            (click)="clickNaUroProfesorja(urnikProfesorja[profesor][j])"
+                            [ngStyle]="{'background-color': barvaUrnikProfesorja(profesor, j)}">
+                            {{urnikProfesorja[profesor][j]}}
+
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- --------------------- PDF PDF PDF PDF PDF --------------------------------- -->
+
+<table *ngIf="pdf" id="p" class="table table-bordered text-center"
+    style="table-layout: fixed; width: 100%; text-align: center; display: none;">
+    <thead>
+        <tr class="bg-light-gray">
+            <th class="text-uppercase">Profesor</th>
+            <td *ngFor="let i of [1,2,3,4,5,6,7]" class="text-uppercase" style="background-color: #424242;  
+                border: 1px solid #424242; color: white;"><strong>{{i}}</strong></td>
+        </tr>
+    </thead>
+    <tbody *ngFor="let a of izbraniProfesorji">
+        <tr *ngIf="urnikProfesorja[a][0] != 1">
+            <td class="align-middle"
+                style="background-color: #424242; border: 1px solid #424242; color: white; cursor: pointer;">
+                {{a}}
+            </td>
+            <td id="del" *ngFor="let j of [0,1,2,3,4,5,6]" style="border: 1px solid #424242; text-overflow: ellipsis;
+                cursor: pointer; background-color: #ededed; font-size: medium-large;">
+                {{urnikProfesorja[a][j]}}
+
+            </td>
+        </tr>
+
+    </tbody>
+</table>
+
+
+
+<table *ngIf="pdf" id="p1" class="table table-bordered text-center"
+    style="table-layout: fixed; width: 100%; text-align: center; display: none;">
+
+    <thead>
+        <tr class="bg-light-gray">
+            <th class="text-uppercase">Razredi</th>
+            <td *ngFor="let i of [1,2,3,4,5,6,7]" class="text-uppercase" style="  
+            border: 1px solid #424242; color: white; background-color: #424242;"><strong>{{i}}</strong></td>
+        </tr>
+    </thead>
+    <tbody *ngFor="let razred of izbraniRazredi">
+        <tr>
+            <td class="align-middle" style="background-color: #424242; border: 1px solid #424242; color: white;">
+                {{razred}}
+            </td>
+            <td id="del" *ngFor="let j of [0,1,2,3,4,5,6]" style="border: 1px solid #424242; overflow: hidden; text-overflow: ellipsis;
+            cursor: pointer;">
+                <i *ngIf="objektRazredov[razred + 'predmet'][j] != 'prosto'">{{objektRazredov[razred +
+                    'predmet'][j]}}</i>
+                <i *ngIf="objektRazredov[razred + 'predmet'][j] == 'prosto'">&nbsp;</i>
+            </td>
+        </tr>
+
+
+    </tbody>
+</table>
+
+
+<!-- EXCEL EXCEL EXCEL EXCEL EXCEL EXCEL EXCEL EXCEL EXCEL EXCEL EXCEL EXCEL  EXCEL -->
+
+
+<div *ngIf="excel" style="display: none;">
+    <table id="excel-table" style="border: 1px solid black;">
+        <tr style="text-align: center; border: 1px solid red;">
+            <td></td>
+            <td colspan="7"><strong>PONEDELJEK</strong></td>
+            <td></td>
+            <td></td>
+            <td colspan="7" style="text-align: center;"><strong>TOREK</strong></td>
+            <td></td>
+            <td></td>
+            <td colspan="7" style="text-align: center;"><strong>SREDA</strong></td>
+            <td></td>
+            <td></td>
+            <td colspan="7" style="text-align: center;"><strong>CETRTEK</strong></td>
+            <td></td>
+            <td></td>
+            <td colspan="7" style="text-align: center;"><strong>PETEK</strong></td>
+
+        </tr>
+        <tr>
+            <td>Profesor</td>
+            <td *ngFor="let u of ure">{{u}}</td>
+            <td></td>
+            <td>Profesor</td>
+            <td *ngFor="let u of ure">{{u}}</td>
+            <td></td>
+            <td>Profesor</td>
+            <td *ngFor="let u of ure">{{u}}</td>
+            <td></td>
+            <td>Profesor</td>
+            <td *ngFor="let u of ure">{{u}}</td>
+            <td></td>
+            <td>Profesor</td>
+            <td *ngFor="let u of ure">{{u}}</td>
+        </tr>
+
+        <tr *ngFor="let a of urnikProfesor">
+            <td>{{a.profesor}}</td>
+            <td *ngFor="let p of a['pon']">
+                <i *ngIf="p != 'Prosto' && p != 'prosto'">{{p.toUpperCase()}}</i>
+                <i *ngIf="p == 'Prosto' || p == 'prosto' || p.length < 2">&nbsp;</i>
+            </td>
+            <td></td>
+            <td>{{a.profesor}}</td>
+            <td *ngFor="let p of a['tor']">
+                <i *ngIf="p != 'Prosto' && p != 'prosto'">{{p.toUpperCase()}}</i>
+                <i *ngIf="p == 'Prosto' || p == 'prosto' || p.length < 2">&nbsp;</i>
+            </td>
+            <td></td>
+            <td>{{a.profesor}}</td>
+            <td *ngFor="let p of a['sre']">
+                <i *ngIf="p != 'Prosto' && p != 'prosto'">{{p.toUpperCase()}}</i>
+                <i *ngIf="p == 'Prosto' || p == 'prosto' || p.length < 2">&nbsp;</i>
+            </td>
+            <td></td>
+            <td>{{a.profesor}}</td>
+            <td *ngFor="let p of a['cet']">
+                <i *ngIf="p != 'Prosto' && p != 'prosto'">{{p.toUpperCase()}}</i>
+                <i *ngIf="p == 'Prosto' || p == 'prosto' || p.length < 2">&nbsp;</i>
+            </td>
+            <td></td>
+            <td>{{a.profesor}}</td>
+            <td *ngFor="let p of a['pet']">
+                <i *ngIf="p != 'Prosto' && p != 'prosto'">{{p.toUpperCase()}}</i>
+                <i *ngIf="p == 'Prosto' || p == 'prosto' || p.length < 2">&nbsp;</i>
+            </td>
+        </tr>
+
+    </table>
+
+    <br><br>
+
+    <table id="excel-table2">
+        <tr>
+            <td></td>
+            <td colspan="7"><strong>PONEDELJEK</strong></td>
+            <td></td>
+            <td></td>
+            <td colspan="7" style="text-align: center;"><strong>TOREK</strong></td>
+            <td></td>
+            <td></td>
+            <td colspan="7" style="text-align: center;"><strong>SREDA</strong></td>
+            <td></td>
+            <td></td>
+            <td colspan="7" style="text-align: center;"><strong>CETRTEK</strong></td>
+            <td></td>
+            <td></td>
+            <td colspan="7" style="text-align: center;"><strong>PETEK</strong></td>
+
+        </tr>
+        <tr>
+            <td>RAZ</td>
+            <td *ngFor="let u of ure">{{u}}</td>
+            <td></td>
+            <td>RAZ</td>
+            <td *ngFor="let u of ure">{{u}}</td>
+            <td></td>
+            <td>RAZ</td>
+            <td *ngFor="let u of ure">{{u}}</td>
+            <td></td>
+            <td>RAZ</td>
+            <td *ngFor="let u of ure">{{u}}</td>
+            <td></td>
+            <td>RAZ</td>
+            <td *ngFor="let u of ure">{{u}}</td>
+        </tr>
+
+        <tr *ngFor="let a of urnikRazred">
+            <td>{{a.razred}}</td>
+            <td *ngFor="let p of a['pon']">
+                <i *ngIf="p != 'Prosto' && p != 'prosto'">{{p}}</i>
+                <i *ngIf="p == 'Prosto' || p == 'prosto' || p.length < 2">&nbsp;</i>
+            </td>
+            <td></td>
+            <td>{{a.razred}}</td>
+            <td *ngFor="let p of a['tor']">
+                <i *ngIf="p != 'Prosto' && p != 'prosto'">{{p}}</i>
+                <i *ngIf="p == 'Prosto' || p == 'prosto' || p.length < 2">&nbsp;</i>
+            </td>
+            <td></td>
+            <td>{{a.razred}}</td>
+            <td *ngFor="let p of a['sre']">
+                <i *ngIf="p != 'Prosto' && p != 'prosto'">{{p}}</i>
+                <i *ngIf="p == 'Prosto' || p == 'prosto' || p.length < 2">&nbsp;</i>
+            </td>
+            <td></td>
+            <td>{{a.razred}}</td>
+            <td *ngFor="let p of a['cet']">
+                <i *ngIf="p != 'Prosto' && p != 'prosto'">{{p}}</i>
+                <i *ngIf="p == 'Prosto' || p == 'prosto' || p.length < 2">&nbsp;</i>
+            </td>
+            <td></td>
+            <td>{{a.razred}}</td>
+            <td *ngFor="let p of a['pet']">
+                <i *ngIf="p != 'Prosto' && p != 'prosto'">{{p}}</i>
+                <i *ngIf="p == 'Prosto' || p == 'prosto' || p.length < 2">&nbsp;</i>
+            </td>
+        </tr>
+    </table>
+</div>

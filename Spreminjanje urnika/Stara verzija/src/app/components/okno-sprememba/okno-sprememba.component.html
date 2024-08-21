@@ -1,0 +1,145 @@
+
+<div class="col" style="color: black;">
+    <h2 class="text" mat-dialog-title style="text-align: center;">Sprememba</h2>
+</div>
+
+<mat-dialog-content>
+    <div class="row">
+        <div class="container">
+
+            <!-- Opis ure -->
+            <table class="text" style="text-align: center; width: 100%;" >
+                <tr>
+                    <td><mat-icon>access_time</mat-icon></td>
+                    <td><mat-icon>person</mat-icon></td>
+                    <td><mat-icon>school</mat-icon></td>
+                    <td><mat-icon>class</mat-icon></td>
+                </tr>
+                <tr>
+                    <td>{{data.ura}}</td>
+                    <td>{{data.profesor}}</td>
+                    <td>{{data.razred}}</td>
+                    <td>{{data.predmet.toUpperCase()}}</td>
+                </tr>
+            </table>
+
+            <br>
+
+            <div *ngIf="jeVecProfesorjev" style="text-align: center; width: 100%; color: black;">
+                <h2>Ura vsebuje več profesorjev</h2>
+                <button  mat-raised-button (click)="toggleOdstraniEnega()" >Odstrani samo enega profesorja</button>
+                <hr>
+                <!-- <button *ngIf="data.predmet != 'Prosto' && data.predmet != 'prosto'" class="btn btn-outline-light" style="width: 50%;" (click)="toggle()">Dodaj profesorja</button> -->
+            </div>
+
+            <div *ngIf="toggleOdstrani" style="text-align: center;">
+                <h2 style="color: black;">Izberi profesorja, ki želiš odstraniti:</h2>
+                <div class="row">
+                    <table style="margin: auto; table-layout: fixed; width: auto;">
+                        <td *ngFor="let profesor of vecProfesorjev">
+                            <button mat-raised-button color="warn" (click)="odstraniProfesorja(profesor)">{{profesor}}</button>
+                        </td>
+                    </table>
+                    
+                    
+                </div>
+                <br>
+            </div>
+        
+            <!-- <div *ngIf="1" style="text-align: center; color: black;">
+                <p *ngFor="let a of profesorjiNaRazpolago">Naslednji profesor je na razpolago: <i style="cursor: pointer;" (click)="dolociProfesorja(a)">
+                    <strong>{{a}}</strong></i></p>
+            </div> -->
+
+            <br>
+
+            <!--  -->
+            <ng-select (change)="izberiProfesorja()" 
+                [(ngModel)]="izbraniProfesor" 
+                appendTo="body" autofocus 
+                placeholder="Izbreri prostega profesorja">
+                    <ng-option [value]="a[0]" *ngFor="let a of prostiProfesorji" >
+                        
+                            <i *ngIf="a[1] == 1" class="fa-solid fa-calendar-xmark"></i> 
+                            <i *ngIf="a[1] == 2" class="fa-solid fa-registered"></i> 
+                            <i *ngIf="a[1] == 3" class="fa-solid fa-circle-xmark"></i>  
+                            <i *ngIf="a[1] == 4" class="fa-solid fa-arrows-left-right-to-line"></i> 
+                            
+                        {{a[0]}}  </ng-option>
+                </ng-select> 
+            
+                <br>
+
+                <input [formControl]="predmet" type="text" class="form-control" id="formGroupExampleInput" placeholder="Vnesi predmet">
+        
+                <br>
+
+                <div class="alert alert-warning" role="alert" *ngIf="prostDan" style="text-align: center; color: black;">
+                    Profesor: {{this.data.profesor}} in razred: {{this.data.razred}} se sprostita
+                </div>
+
+                <br>
+                <div *ngIf="!prostDan && !izbraniProfesor.includes(',')" style="text-align: center;">
+                    <div class="alert alert-warning" role="alert" *ngIf="zamenjanRazred != 'Prosto' && zamenjanRazred != '' && !zamenjanRazred.includes('R')
+                    && izbraniProfesor != data.profesor && sam != izbraniProfesor">
+                        Profesor/ica <strong>{{izbraniProfesor}}</strong> je že v <strong>{{zamenjanRazred}}</strong>  
+                    </div>
+                    <div class="alert alert-primary" role="alert" *ngIf="zamenjanRazred == 'Prosto'">
+                        Profesor/ica <strong>{{profesor}}</strong> je <strong>prost/a  </strong>
+                    </div>
+                    <div class="alert alert-primary" role="alert" *ngIf="zamenjanRazred.includes('R')">
+                        Profesor/ica <strong>{{profesor}}</strong> je <strong>na razpolago  </strong>
+                    </div>
+                </div>
+
+                <div *ngIf="jeVecProfesorjev && vecProfesorjev.length == 1" style="color: black;">
+                    <div class="alert alert-primary" role="alert" style="text-align: center;">
+                        Profesor/ica <strong>{{izbraniProfesor}}</strong> bo uro v <strong>{{data.razred}}</strong> imel/a sam/a
+                    </div>
+                    <div class="alert alert-warning" role="alert" style="text-align: center;">
+                        Profesor/ica <strong>{{izbrisanProfesor}}</strong> se sprosti
+                    </div>
+                </div>
+
+                <br>
+
+                <table class="text" *ngIf="profesor && !prostDan && !izbraniProfesor.includes(',')" style="table-layout: fixed; width: 100%; text-align: center;">
+                    <tr>
+                        <th *ngFor="let u of ure">
+                            <i *ngIf="u != this.data.ura">{{u}}</i>
+                            <i *ngIf="u == this.data.ura"><i class="fa-solid fa-circle-xmark"></i></i>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td *ngFor="let ur of urnik1, let i = index" style="border: 1px solid black;">
+                            <i *ngIf="ur != 'Prosto' && i == this.data.ura-1"><strong>{{ur}}</strong></i>
+                            <i *ngIf="ur != 'Prosto' && i != this.data.ura-1">{{ur}}</i>
+                            <i *ngIf="ur == 'Prosto'">&nbsp;</i>
+                        </td>
+                    </tr>
+                </table>
+
+                
+
+                
+        </div>
+    </div>
+</mat-dialog-content>
+
+
+
+<mat-dialog-actions align="end">
+    <button mat-dialog-close mat-raised-button color="warn">Prekliči</button>
+
+    <button *ngIf="data.predmet != 'Prosto'" mat-raised-button  (click)="prostaUra()">
+        Prosta ura   
+    </button>
+
+    <button *ngIf="data.predmet == 'Prosto'" mat-raised-button (click)="potrdiProstoUro()">&nbsp;Potrdi prosto uro&nbsp;</button>
+    
+    <button color="accent" *ngIf="predmet.value?.length > 0 && profesor?.length > 0" mat-raised-button  (click)="spremeni()">
+        Spremeni    
+    </button>
+
+</mat-dialog-actions>
+ 

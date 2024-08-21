@@ -1,0 +1,39 @@
+
+
+<mat-form-field style="display: none;" class="example-full-width">
+    <input [matDatepickerFilter]="myFilter"  (dateInput)="izberiDatum($event)" matInput [matDatepicker]="picker">
+    <mat-datepicker #picker></mat-datepicker>
+</mat-form-field>
+
+<div style="text-align: center;">
+    <br>
+    <button mat-raised-button   (click)="picker.open()">Izberi datum</button>
+</div>
+
+<div *ngIf="loaded" style="text-align: center;">
+<hr>
+
+<h2 *ngIf="datum.length > 0">{{datum[0]}} - {{datum[4]}}</h2>
+
+<h2 *ngIf="!jeUrnik">Urnik za ta teden ni še objavljen</h2>
+
+<table *ngIf="jeUrnik">
+    <tr>
+        <th class="prvi"></th>
+        <th *ngFor="let dan of dnevi" style="border: 1px solid #424242; color: white; background-color: #0D6EFD;">
+            {{dan.toUpperCase()}}</th>
+    </tr>
+    <tr *ngFor="let i of [0,1,2,3,4,5,6]">
+
+        <td id="c" class="prvi">{{i+1}}</td>
+
+        <td *ngFor="let d of dnevi" class="teden">
+            <span *ngIf="urnik[d][i] != 'Prosto' && urnik[d][i] != 'prosto' && dan != d">{{urnik[d][i]}}</span>
+            <span *ngIf="urnik[d][i] != 'Prosto' && urnik[d][i] != 'prosto' && dan == d">
+                <strong>{{urnik[d][i]}}</strong>
+            </span>
+        </td>
+
+    </tr>
+</table>
+</div>

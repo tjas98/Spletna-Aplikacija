@@ -1,0 +1,27 @@
+<hr>
+<mat-card appearance="outlined" style="padding: 5px; text-align: center; margin: auto; background-color: white;">
+    <mat-card-title style="display: flex; justify-content: center;">Potrebna je prijava</mat-card-title>
+    <br>
+    <mat-card-content style="text-align: center; margin: auto;">
+
+        <asl-google-signin-button id = "logo" shape="pill" width="300" theme='filled_blue' type='standard' size='large'>
+        </asl-google-signin-button> 
+
+    </mat-card-content>
+</mat-card>
+
+<hr>
+
+<div *ngIf="noAdmin" class="alert alert-danger" role="alert" style="text-align: center; width: 50%; margin: auto;">
+    <h2 class="alert-heading"><strong>Niste administrator</strong></h2>
+    <h3>Če je to napaka prosim sporočite tajništvu</h3>
+</div>
+
+<div style="text-align: center;">
+    <button mat-raised-button (click)="dodaj()">Dodaj administratorja</button>
+</div>
+
+
+
+
+

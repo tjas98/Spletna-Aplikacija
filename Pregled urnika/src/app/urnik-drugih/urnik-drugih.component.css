@@ -1,0 +1,42 @@
+
+.teden {
+    padding: 5px;
+    width: 20%;
+    text-align: center;
+    border: 1px solid #424242; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    background-color: white;
+}
+
+table {
+    border-collapse: collapse;
+    font-family: Tahoma, Geneva, sans-serif;
+}
+
+td:nth-child(even) {
+    background-color: #f0f2f5fb;
+}
+
+.prvi {
+    width: min-content;
+}
+
+#c {
+    background-color: #0D6EFD;
+    color: white;
+}
+
+td {
+    padding: 5px;
+    height: 10px;
+    text-align: center;
+    border: 1px solid #424242; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    background-color: white;
+}
+
+th {
+    text-align: center;
+}

@@ -1,0 +1,53 @@
+
+
+<h1 style="text-align: center; color: black;" mat-dialog-title>{{sporocilo}}</h1>
+
+<div *ngIf="urediUre">
+  <table style="margin: auto; table-layout: fixed; text-align: center; padding: 2px;">
+    <tr>
+      <th></th>
+      <th>Začetek</th>
+      <th>Konec</th>
+    </tr>
+    <tr *ngFor="let element of zacetekUre, index as i">
+      <th>{{i+1}}</th>
+      <td>{{zacetekUre[i]}}</td>
+      <td>{{konecUre[i]}}</td>
+    </tr>
+  </table>
+</div>
+
+<div *ngIf="odsoten">
+  <ng-select style="width: 75%; margin: auto;"
+    [items]="vsiProfesorji" 
+    autofocus 
+    appearance="outline" 
+    placeholder="Izberi profesorja" 
+    appendTo="body"
+    [(ngModel)]="izbraniProfesorji" 
+    [hideSelected]="true">
+  </ng-select>
+  <br>
+</div>
+
+<mat-dialog-actions>
+  <table style="table-layout: fixed; text-align: center; width: 100%;">
+    <td style="border: none;">
+      <button id="ne" mat-dialog-close mat-raised-button color="primary">
+        <i class="fa-solid fa-xmark"></i> Prekliči
+      </button>
+    </td>
+    <td style="border: none;">
+      <button *ngIf="odsoten" (click)="izbrisiProfesorje()" [disabled]="izbraniProfesorji.length == 0" style="color: white;" id="ja" [mat-dialog-close]="true" mat-raised-button color="accent">
+        <i class="fa-solid fa-check"></i> Potrdi
+      </button>
+      <button *ngIf="!odsoten"  style="color: white;" id="ja" [mat-dialog-close]="true" mat-raised-button color="accent">
+        <i class="fa-solid fa-check"></i> Potrdi
+      </button>
+      
+    </td>
+  </table>
+  
+</mat-dialog-actions>
+<br>
+

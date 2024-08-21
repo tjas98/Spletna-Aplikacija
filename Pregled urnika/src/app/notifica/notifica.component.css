@@ -1,0 +1,26 @@
+.vse {
+    padding: 5px;
+    
+    text-align: center;
+    border: 1px solid #424242; 
+    overflow: hidden; 
+    
+    background-color: white;
+}
+
+.imena {
+    background-color: #0D6EFD;
+    border: 1px solid #424242; 
+    color: white;
+    text-align: center;
+    padding: 5px;
+    overflow: hidden;
+}
+
+.ure {
+    background-color: #0D6EFD;
+    border: 1px solid #424242; 
+    color: white;
+    text-align: center;
+    padding: 5px;
+}

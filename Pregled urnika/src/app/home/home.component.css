@@ -1,0 +1,79 @@
+
+table {
+    border-collapse: collapse;
+    font-family: Tahoma, Geneva, sans-serif;
+}
+
+.example-spacer {
+    flex: 1 1 auto;
+  }
+
+.teden {
+    padding: 5px;
+    width: 20%;
+    text-align: center;
+    border: 1px solid #424242; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    background-color: white;
+}
+
+.teden:nth-child(even) {
+    background-color: #f0f2f5fb;
+}
+
+.prvi {
+    width: min-content;
+    padding: 5px;
+    border: 1px solid #424242;
+}
+
+#c {
+    background-color: #0D6EFD;
+    color: white;
+}
+
+/*
+td {
+    padding: 5px;
+    height: 10px;
+    text-align: center;
+    border: 1px solid #424242; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    background-color: white;
+}
+
+#B4B4B4
+*/
+
+.dan {
+    border: 1px solid #424242;
+    text-align: center;
+    padding: 5px;
+}
+
+.icons {
+    font-size: larger;
+}
+
+
+.ure {
+    background-color: #0D6EFD;
+    padding: 0px;
+    margin-top: 0;
+    text-align: center;
+}
+
+body {
+    height: 100%;
+}
+
+h1,h2 {
+    text-align: center;
+}
+
+th {
+    text-align: center;
+}
+

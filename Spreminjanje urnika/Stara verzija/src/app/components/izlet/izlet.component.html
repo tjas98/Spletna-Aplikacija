@@ -1,0 +1,99 @@
+<h2 mat-dialog-title style="text-align: center; color: black;">Dejavnosti</h2>
+ <mat-dialog-content>
+
+    <table style="text-align: center; margin: auto;">
+        <mat-chip-listbox >
+            <mat-chip-option selected (click)="onValChange(1)"  color="accent" > Celodnevno</mat-chip-option>
+            <mat-chip-option  (click)="onValChange(2)"  color="accent" > Posamezne ure</mat-chip-option>
+        </mat-chip-listbox>
+    </table>
+    
+    <br>
+
+    <ng-select *ngIf="selectedVal == '1'"
+    [items]="dni"
+    placeholder="Izberi dni"
+    autofocus
+    appearance="outline"
+    appendTo="body"
+    [multiple]="true"
+    [(ngModel)]="izbraniDnevi">
+    </ng-select>
+
+    <ng-select *ngIf="selectedVal == '2'"
+    [items]="dni"
+    placeholder="Izberi dan"
+    autofocus
+    appearance="outline"
+    appendTo="body"
+    [(ngModel)]="izbranDan">
+    </ng-select>
+
+    <br>
+
+    <div *ngIf="selectedVal == '2'">
+        <ng-select 
+        [items]="ure"
+        placeholder="Izberi ure"
+        autofocus
+        appearance="outline"
+        appendTo="body"
+        [multiple]="true"
+        [(ngModel)]="izbraneUre">
+        </ng-select>
+        <br>
+    </div>
+    
+
+    <ng-select 
+    [items]="vsiRazredi"
+    placeholder="Ibzeri razrede"
+    autofocus
+    appearance="outline"
+    appendTo="body"
+    [multiple]="true"
+    [(ngModel)]="izbraniRazredi">
+    </ng-select>
+
+    <br>
+
+    <ng-select 
+    [items]="vsiProfesorji"
+    placeholder="Ibzeri spremljevalce"
+    autofocus
+    appearance="outline"
+    appendTo="body"
+    [multiple]="true"
+    [(ngModel)]="izbraniProfesorji">
+    </ng-select>
+
+    <br>
+
+    <input [formControl]="dejavnost" type="text" class="form-control" placeholder="Vnesi dejavnost">
+
+    <br>
+    
+    <div class="row justify-center" style="text-align: center; color: black;">
+        <div class="col" *ngIf="izbraniRazredi.length > 0">
+            <h3><strong>Razredi</strong> </h3>
+            <p *ngFor="let a of izbraniRazredi">{{a}}</p>
+        </div>
+        
+        <div class="col" *ngIf="izbraniProfesorji.length > 0">
+            <h3><strong>Profesorji</strong></h3>
+            <p *ngFor="let a of izbraniProfesorji">{{a}}</p>
+        </div>
+    </div>
+ 
+ </mat-dialog-content>
+ 
+ <mat-dialog-actions align="end">
+     <button mat-raised-button mat-dialog-close color="warn" >Cancel</button>
+     &nbsp;&nbsp;&nbsp;
+     <button [disabled]="preglejCeVse()" mat-raised-button [mat-dialog-close]="true" color="accent" (click)="poslji()">Spremeni</button>
+
+     
+ </mat-dialog-actions>
+ 
+ 
+

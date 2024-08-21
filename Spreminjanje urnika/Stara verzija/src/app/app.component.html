@@ -1,0 +1,11 @@
+<app-navbar *ngIf="!loading"></app-navbar>
+
+
+<mat-spinner style="margin: auto;" class="vertical-center" *ngIf="loading" ></mat-spinner>
+
+
+
+<div *ngIf="!loading" class="container-fluid" id="glavni" [style.height.px]="visina">
+    <router-outlet></router-outlet>
+</div>
+

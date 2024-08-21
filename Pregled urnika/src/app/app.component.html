@@ -1,0 +1,7 @@
+
+<app-navbar *ngIf="!desktop"></app-navbar>
+
+<mat-spinner style="margin: auto;" class="vertical-center" *ngIf="loading" ></mat-spinner>
+<router-outlet></router-outlet>
+
+

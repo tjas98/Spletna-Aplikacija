@@ -1,0 +1,33 @@
+
+<br>
+<h1 style="text-align: center;" *ngIf="!paidFor">Pozor!</h1>
+
+<mat-card style="padding: 5px;">
+    
+    <mat-card-title style="display: flex; justify-content: center;">Plačilo</mat-card-title>
+    
+    <mat-card-content>
+        <p> Zaradi stroškov vzdrževanja in prilagajanja aplikacije bo aplikacija za urnik plačljiva.</p>
+       
+        <p>Cena bo <strong>1.99€</strong> letno. </p>
+
+        <p>Dostop do urnika bo omogočen po plačilu.</p>
+
+        <p>Hvala za razumevanje!</p>
+
+    </mat-card-content>
+</mat-card>
+
+<br>
+<hr>
+<br>
+
+<div>
+    <div #paymentRef></div>
+</div>
+
+
+<div *ngIf="napaka">
+    <h1>NAPAKAAAAAAAA</h1>
+</div>
+

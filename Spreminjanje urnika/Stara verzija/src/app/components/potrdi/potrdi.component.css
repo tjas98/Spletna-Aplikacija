@@ -1,0 +1,16 @@
+button:hover {
+    opacity: 60%;
+}
+
+#ne {
+    background-color: #FF383B;
+}
+
+#ja {
+    background-color: #00CD51;
+}
+
+td, tr, th {
+    border: 1px solid black;
+    padding: 2px;
+}

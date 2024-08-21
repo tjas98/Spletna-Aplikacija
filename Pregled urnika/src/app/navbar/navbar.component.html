@@ -1,0 +1,65 @@
+
+<mat-toolbar style="background-color: #0066CC;">
+    <button [disabled]="route == '/obvestilo' || route == '/google'" style="color: white;" mat-icon-button class="example-icon" [matMenuTriggerFor]="menu">
+        <mat-icon>menu</mat-icon>
+   </button>
+  
+   
+   <span style="text-align: center; flex: auto;"></span>
+   <a style="color: white">{{kdo}}</a>
+
+   <span class="example-spacer"></span>
+   
+   
+  
+  
+   <button [disabled]="route == '/obvestilo'" style="color: white;" mat-icon-button *ngIf="online" (click)="nalozi()">
+    <mat-icon *ngIf="online">refresh</mat-icon>
+  </button>
+  
+   
+</mat-toolbar>
+
+<div *ngIf="loading" style="padding: 5px;">
+  <h2 style="text-align: center;">Nalaganje lahko traja do 1 minute. Prosim počakajte...</h2>
+  <mat-spinner style="margin: auto;"></mat-spinner>
+</div>
+
+
+
+  <div  *ngIf="!online" style="text-align: center; margin-top: 5px;" class="alert alert-danger" role="alert">
+    <strong>Ni spletne povezave!</strong> Urnik se ne posodablja
+  </div>
+
+
+
+<mat-menu #menu="matMenu"> 
+    <button [disabled]="route == '/home'" [routerLink]="['/home']" mat-menu-item>
+        <mat-icon *ngIf="online">home</mat-icon>
+        <span>Glavna stran</span>
+    </button>
+    <button [disabled]="route == '/urnik'" [routerLink]="['/urnik']" mat-menu-item>
+      <mat-icon *ngIf="online">access_time</mat-icon>
+      <span>Urnik</span>
+    </button>
+    <button [disabled]="route == '/celUrnik'" [routerLink]="['/celUrnik']" mat-menu-item>
+      <mat-icon *ngIf="online">border_all</mat-icon>
+      <span>Cel urnik</span>
+    </button>
+    <button [disabled]="route == '/datum'" [routerLink]="['/datum']" mat-menu-item>
+      <mat-icon *ngIf="online">calendar_month</mat-icon>
+      <span>Urnik po datumu</span>
+    </button>
+    <button [disabled]="soObvestila()" (click)="notifica()" mat-menu-item>
+      <mat-icon *ngIf="online">notifications</mat-icon>
+      <span>Prejmi obvestila</span>
+    </button>
+    <button [disabled]="route == '/login' || !online" [routerLink]="['/login']" mat-menu-item>
+      <mat-icon *ngIf="online">person</mat-icon>
+      <span>Zamenjaj profesorja</span>
+    </button>
+    <!-- <button mat-menu-item (click)="logout()">
+      <mat-icon>logout</mat-icon>
+      <span>Logout</span>
+    </button> -->
+  </mat-menu>

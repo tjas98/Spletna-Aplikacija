@@ -1,0 +1,90 @@
+
+
+<mat-toolbar  *ngIf="!mobile" style="background-color: #0D6EFD; text-align: center;">
+  
+      <button mat-icon-button [matMenuTriggerFor]="menu">
+        <mat-icon>menu</mat-icon>
+      </button>
+      &nbsp;
+      <mat-chip-listbox *ngIf="loaded && route == '/sprememba'" aria-label="Fish selection">
+        <span *ngFor="let d of teden, let i = index">
+          <mat-chip-option [matBadgeHidden]="prostiNaDan[i] == 0" [selected]="d == dan" matBadgePosition="before"
+            matBadge="{{prostiNaDan[i]}}" (click)="onValChange(d, i)" matBadgeColor="warn"
+            color="accent">{{tedenDolgo[i]}} {{datum[i]}}</mat-chip-option>
+        </span>
+      </mat-chip-listbox>
+       
+    
+    
+   
+     
+      <span style="flex: 1 1"></span>
+      <button mat-button (click)="vrniseNaDanes()" *ngIf="danes != value">Danes</button> 
+      &nbsp;
+      <button mat-raised-button (dblclick)="vrniseNaDanes()" (click)="picker.open()">{{value}}</button>
+    
+  
+  
+  
+  
+
+</mat-toolbar>
+
+
+  <mat-form-field style="display: none;" class="example-full-width">
+    <input [matDatepickerFilter]="myFilter" (dateInput)="izberiDatum($event)" matInput [matDatepicker]="picker">
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+
+ 
+
+
+<mat-toolbar *ngIf="mobile && loaded" style="background-color: #0D6EFD;">
+  <button mat-icon-button [matMenuTriggerFor]="menu">
+    <mat-icon>menu</mat-icon>
+  </button>
+
+  <span class="example-spacer" style="flex: 1 1 auto;"></span>
+  
+  <button mat-button [matMenuTriggerFor]="mobilen">{{danLepo}}</button>
+
+  <span class="example-spacer" style="flex: 1 1 auto;"></span>
+  <button mat-icon-button style="visibility: hidden;">
+    <mat-icon>menu</mat-icon>
+  </button>
+
+  
+
+</mat-toolbar>
+
+<mat-menu #kasnUrnik="matMenu">
+  <button mat-menu-item [disabled]="!shranjen" (click)="uporabljajShranjen(0)">
+    <span>Uporabljaj shranjen urnik</span>
+  </button>
+  <button mat-menu-item [disabled]="!potrjen" (click)="uporabljajShranjen(1)">
+    <span>Uporabljaj potrjen urnik</span>
+  </button>
+</mat-menu>
+
+
+<mat-menu #menu="matMenu">
+  <button mat-menu-item [disabled]="route == '/sprememba' || route == '/login' || route == '/auth'" [routerLink]="['/sprememba']">
+    <mat-icon>published_with_changes</mat-icon>
+    <span>Sprememba</span>
+  </button>
+  <button mat-menu-item [disabled]="route == '/urejanje' || route == '/login' || route == '/auth'" [routerLink]="['/urejanje']">
+    <mat-icon>access_time</mat-icon>
+    <span>Uredi urnik</span>
+  </button>
+  <button mat-menu-item (click)="logout()">
+    <mat-icon>logout</mat-icon>
+    <span>Logout</span>
+  </button>
+</mat-menu>
+
+<mat-menu #mobilen="matMenu" >
+  <button (click)="onValChange(teden[i], i)" mat-menu-item *ngFor="let d of tedenDolgo, index as i">
+    {{ d }} - {{prostiNaDan[i]}}
+  </button>
+   
+</mat-menu>

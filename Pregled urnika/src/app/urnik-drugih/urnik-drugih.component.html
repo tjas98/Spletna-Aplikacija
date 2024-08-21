@@ -1,0 +1,48 @@
+
+<br>
+<div style="text-align: center;">
+    <h4>Izberi profesorja ali razred</h4>
+    <mat-form-field appearance="fill">
+        <mat-label>Izberi profesorja ali razred</mat-label>
+        <mat-select (selectionChange)="najdi()" [(value)]="selected">
+
+            <mat-optgroup [label]="'Profesorji'">
+                <mat-option *ngFor="let a of vsiProfesorji" value="{{a}}">{{a}}</mat-option>
+            </mat-optgroup>
+
+            <mat-optgroup [label]="'Razredi'">
+                <mat-option *ngFor="let a of vsiRazredi" value="{{a}}">{{a}}</mat-option>
+            </mat-optgroup>
+
+        </mat-select>
+    </mat-form-field>
+    <br>
+</div>
+
+<br>
+
+<div *ngIf="loaded">
+
+    <h3 style="text-align: center;" *ngIf="ura > 0 && dan != ''">{{selected}} ima <strong>{{urnik[dan][ura]}}</strong></h3>
+
+    <table *ngIf="loaded" style="width: 100%;">
+        <tr>
+            <th class="prvi"></th>
+            <th *ngFor="let dan of dni" style="border: 1px solid #424242; color: white; background-color: #0D6EFD;">
+                {{dan}}</th>
+        </tr>
+        <tr *ngFor="let i of [0,1,2,3,4,5,6]">
+
+            <td id="c" class="prvi">{{i+1}}</td>
+
+            <td *ngFor="let d of dnevi" class="teden" 
+            [ngStyle]="{'background-color': i == ura && d == dan ? '#B3B3B3' :  '' }">
+                <span *ngIf="urnik[d][i] != 'Prosto' && urnik[d][i] != 'prosto' && dan != d">{{urnik[d][i]}}</span>
+                <span *ngIf="urnik[d][i] != 'Prosto' && urnik[d][i] != 'prosto' && dan == d">
+                    <strong>{{urnik[d][i]}}</strong>
+                </span>
+            </td>
+
+        </tr>
+    </table>
+</div>

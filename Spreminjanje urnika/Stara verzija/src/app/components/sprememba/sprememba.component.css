@@ -1,0 +1,111 @@
+.bg-light-gray {
+    background-color: #f7f7f7;
+  }
+  .table-bordered thead td, .table-bordered thead th {
+    border-bottom-width: 2px;
+  }
+  .table thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #dee2e6;
+  }
+  .table-bordered td, .table-bordered th {
+    border: 1px solid #dee2e6;
+  }
+  
+  .margin-10px-bottom {
+    margin-bottom: 10px;
+  }
+  .border-radius-5 {
+    border-radius: 5px;
+  }
+  
+  .margin-10px-top {
+    margin-top: 10px;
+  }
+  .font-size14 {
+    font-size: 14px;
+  }
+  
+  .text-light-gray {
+    color: #d6d5d5;
+  }
+  .font-size13 {
+    font-size: 13px;
+  }
+  
+  .table-bordered td, .table-bordered th {
+    border: 1px solid #dee2e6;
+  }
+  .table td, .table th {
+    padding: 5px;
+    vertical-align: top;
+    border-top: 1px solid #dee2e6;
+  }
+
+  #del:hover {
+    -ms-transform: scale(1.05);
+    border-radius: 6px;
+    /* IE 9 */
+    -webkit-transform: scale(1.05);
+    /* Safari 3-8 */
+    transform: scale(1.05);
+  }
+  
+  .izbrisiCLass {
+    width: 100px;
+    height: 100px;
+  }
+  
+  ::ng-deep.mat-tooltip {
+    font-size: 14px;
+    background-color: #212529;
+  }
+  
+  .mat-mdc-progress-spinner circle, .mat-mdc-progress-spinner circle {
+    stroke: #3fb53f;
+  }
+
+  .fabs {
+    background-color: #0D6EFD;
+    color: white;
+
+    /* #198754 */
+  }
+
+
+  .fabs:hover {
+    background-color: #F44336;
+  }
+
+  .zel:hover {
+    background-color: #369165;
+  }
+
+  .title_center {
+    display: flex;
+    justify-content: center; /* align horizontal */
+    align-items: center; /* align vertical */
+  }
+
+  .gumbi {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
+  
+  .fixed-header {
+    margin: 0;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    width: 100% !important;
+}
+
+body {
+  margin: 0;
+}
+
+
+.tdMail {
+  border: 1px solid black;
+}

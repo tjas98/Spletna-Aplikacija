@@ -1,0 +1,29 @@
+
+<br>
+<div class="example-container" style="text-align: center;">
+  <h3>Vnesi mail novega administratorja</h3>
+  <mat-form-field>
+    
+    <input matInput
+           placeholder="Mail"
+           [formControl]="email"
+           required>
+    
+  </mat-form-field>
+  <br>
+  <h3>Vnesi potrebno geslo za vnos administratorja</h3>
+  <mat-form-field>
+    
+    
+    <input matInput
+    type="password"
+           placeholder="Geslo"
+           [formControl]="password"
+           required>
+    
+  </mat-form-field>
+  <br>
+  <button mat-raised-button (click)="poslji()">Vnesi</button>
+  <br><hr><br>
+  <button mat-raised-button (click)="vrni()">Vrnise na login</button>
+</div>

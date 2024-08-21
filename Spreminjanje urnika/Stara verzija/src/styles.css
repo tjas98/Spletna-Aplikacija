@@ -1,0 +1,56 @@
+/* You can add global styles to this file, and also import other style files */
+@import "~@ng-select/ng-select/themes/default.theme.css";
+@import '@angular/material/prebuilt-themes/purple-green.css'; 
+
+
+
+html, body {
+    height: 100%;
+    width: 100%;
+    background-color: #f0f2f5;
+}
+body { 
+  margin: 0; 
+  font-family: "Roboto", "Helvetica Neue", sans-serif; 
+}
+
+
+
+.mdc-dialog__surface {
+    background-color: white !important;
+    border-radius: 10px !important;
+    
+  }
+
+  .ng-select .ng-select-container {
+   
+    font-size: medium !important;
+  }
+  
+  .ng-select.ng-select-single .ng-select-container {
+    font-size: medium !important;
+  }
+
+
+  .mat-mdc-snack-bar-container {
+    --mat-mdc-snack-bar-button-color: #ffffff;
+    --mdc-snackbar-supporting-text-color: #ffffff;
+  
+    &.error {
+      --mdc-snackbar-container-color: #f23a2f;
+    }
+  
+    &.success {
+      --mdc-snackbar-container-color: #43a446;
+    }
+
+    &.warn {
+      --mdc-snackbar-supporting-text-color: black;
+      --mdc-snackbar-container-color: #FFF3CD;
+    }
+  }
+
+ 
+  
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

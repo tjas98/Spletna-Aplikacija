@@ -1,0 +1,25 @@
+mat-sidenav-container {
+    height: 90%;
+  }
+  
+  mat-sidenav {
+    width: 30%;
+    background-color: #0066CC;
+  }
+
+  .example-spacer {
+    flex: 1 1 auto;
+  }
+
+  .vertical-center {
+  
+    margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+
+  }
+
+/*@import "~@ng-select/ng-select/themes/default.theme.css";*/
